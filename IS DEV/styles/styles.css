@@ -1,0 +1,42 @@
+p{
+font-weight: bold;
+font-size: 16px;
+}
+
+
+
+#top{
+    text-decoration: underline;
+}
+
+
+
+
+body{
+background-color: rgb(167, 210, 234);
+font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+color: black;
+border: 5px solid black;
+margin: 20px;
+padding: 50px;
+}
+
+ol li {
+    font-weight: bold;
+}
+
+ul li {
+    font-weight: normal;
+}
+
+.highlight-title {
+    color: rgb(13, 13, 148); 
+}
+
+.spacer-img {
+    display: block !important;
+    margin-top: 40px !important;    /* Gap above the image */
+    margin-bottom: 60px !important; /* Gap before the next numbered item starts */
+    max-width: 100%;
+    height: auto;
+}

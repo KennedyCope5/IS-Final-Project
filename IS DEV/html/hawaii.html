@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hawaii Tic-Tac-Toe vs. Computer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        body { background-color: #e3f2fd; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .game-container { margin-top: 50px; text-align: center; }
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .cell {
+            width: 100px;
+            height: 100px;
+            font-size: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            border: 3px solid #0277bd;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .cell:hover { background-color: #b3e5fc; }
+        .cell.taken { cursor: not-allowed; }
+        #status { font-size: 1.5rem; font-weight: bold; color: #01579b; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="container game-container">
+        <h1>🌴 Hawaii Tic-Tac-Toe 🌺</h1>
+        <p>You are <b>X</b> | Computer is <b>O</b></p>
+        
+        <div id="status">Your Turn!</div>
+
+        <div class="game-board" id="board">
+            <div class="cell" onclick="userMove(0)"></div>
+            <div class="cell" onclick="userMove(1)"></div>
+            <div class="cell" onclick="userMove(2)"></div>
+            <div class="cell" onclick="userMove(3)"></div>
+            <div class="cell" onclick="userMove(4)"></div>
+            <div class="cell" onclick="userMove(5)"></div>
+            <div class="cell" onclick="userMove(6)"></div>
+            <div class="cell" onclick="userMove(7)"></div>
+            <div class="cell" onclick="userMove(8)"></div>
+        </div>
+
+        <button class="btn btn-primary mt-4" onclick="resetGame()">Restart Game</button>
+    </div>
+
+    <script>
+        let board = ['', '', '', '', '', '', '', '', ''];
+        let gameActive = true;
+        const statusDisplay = document.getElementById('status');
+        const cells = document.querySelectorAll('.cell');
+
+        const winPatterns = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8],
+            [0, 3, 6], [1, 4, 7], [2, 5, 8],
+            [0, 4, 8], [2, 4, 6]
+        ];
+
+        function userMove(index) {
+            if (board[index] === '' && gameActive) {
+                makeMove(index, 'X');
+                if (gameActive) {
+                    statusDisplay.innerText = "Computer is thinking...";
+                    setTimeout(computerMove, 600); // Small delay so it feels real
+                }
+            }
+        }
+
+        function computerMove() {
+            if (!gameActive) return;
+
+            // Logic: Find all empty indexes
+            let availableMoves = [];
+            board.forEach((val, index) => {
+                if (val === '') availableMoves.push(index);
+            });
+
+            if (availableMoves.length > 0) {
+                // Pick a random move from the available ones
+                const randomMove = availableMoves[Math.floor(Math.random() * availableMoves.length)];
+                makeMove(randomMove, 'O');
+                if (gameActive) statusDisplay.innerText = "Your Turn!";
+            }
+        }
+
+        function makeMove(index, player) {
+            board[index] = player;
+            cells[index].innerText = player;
+            cells[index].classList.add('taken');
+            checkResult();
+        }
+
+        function checkResult() {
+            let roundWon = false;
+            for (let i = 0; i < winPatterns.length; i++) {
+                const [a, b, c] = winPatterns[i];
+                if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+                    roundWon = true;
+                    break;
+                }
+            }
+
+            if (roundWon) {
+                statusDisplay.innerText = board.includes('X') && !board.includes('O') ? "Wait..." : `Player ${board.lastIndexOf('X') >= 0 ? board[board.indexOf(board.find(e => e))] : ''} Wins!`;
+                // Simplified winner display:
+                const winner = board.filter(x => x !== '').length % 2 === 0 ? 'O' : 'X';
+                statusDisplay.innerText = winner === 'X' ? "You Won! 🥳" : "Computer Won! 🤖";
+                gameActive = false;
+                return;
+            }
+
+            if (!board.includes('')) {
+                statusDisplay.innerText = "It's a Draw! 🤝";
+                gameActive = false;
+            }
+        }
+
+        function resetGame() {
+            board = ['', '', '', '', '', '', '', '', ''];
+            gameActive = true;
+            statusDisplay.innerText = "Your Turn!";
+            cells.forEach(cell => {
+                cell.innerText = '';
+                cell.classList.remove('taken');
+            });
+        }
+    </script>
+</body>
+</html>
